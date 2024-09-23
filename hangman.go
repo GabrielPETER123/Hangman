@@ -16,7 +16,8 @@ func main() {
 	}
 	defer fichier.Close()
 	scanner := bufio.NewScanner(fichier)
-	// variable aléatoire pour choisir un mot
+	// compter le nombre de lignes/mots avec le scanner et la mettre dans une variable à utiliser pour la variable aléatoire "nMot"
+	// variable aléatoire "nMot" pour choisir un mot
 	// variable pour la ligne (qui lit le mot)
 
 	attempts := 10
@@ -24,7 +25,7 @@ func main() {
 	//lire la sortie standard
 	standardOutput := bufio.NewScanner(os.Stdin)
 	for standardOutput.Scan() {
-		line := standardOutput.Text()
+		outputLine := standardOutput.Text()
 	}
 	if err := standardOutput.Err(); err != nil {
 		fmt.Println("Error reading from standard output:", err)
