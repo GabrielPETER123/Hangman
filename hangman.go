@@ -6,14 +6,8 @@ import (
 )
 
 func main() {
-	var attempt int
-	var wrong int
-	var mot []string
 	arg := os.Args[1:]
-	//stocke la var attempt dans le fichier output pour la ré-import pour la ré-utiliser et reset la var attempt
-	fmt.Print(attempt, "\n")
-	//définir le mot via un flag (pas encore défini) pour set le mot à trouver
-	//définir un flag pour reset (pas encore défini) pour reset le mot à trouver et reset les attempts donc le fichier output
+	var mot string
 	if len(arg) > 1 {
 		fmt.Print("Too much input")
 		return
@@ -22,7 +16,7 @@ func main() {
 		fmt.Print("Not enough input")
 		return
 	}
-	if VerifyInput(arg[0], mot) >= -1 && VerifyInput(arg[0]) <= 1 {
+	if VerifyInput(arg[0], mot) >= -1 && VerifyInput(arg[0], mot) <= 1 {
 		return
 	} else {
 		fmt.Print("error")
@@ -31,10 +25,9 @@ func main() {
 }
 
 func PrintHangman() {
-	//pas de forme encore défini
 }
 
-func VerifyInput(s string, mot []string) int {
+func VerifyInput(s string, mot string) int {
 	var ListInput []string
 	if len(ListInput) == 0 {
 		ListInput = append(ListInput, s)
@@ -42,16 +35,16 @@ func VerifyInput(s string, mot []string) int {
 	if len(ListInput) > 0 {
 		for _, r := range ListInput {
 			if s == r {
-				fmt.Print("Input already used.")
+				fmt.Print("lettre déjà utilisée.")
 				return -1
 			} else {
-				for _, r := range Mot {
+				for _, r := range mot {
 					ListInput = append(ListInput, s)
 					if s == r {
-						fmt.Print("Good job!")
+						fmt.Print("Bien joué!")
 						return 1
 					} else {
-						fmt.Print("Unlucky, try again!")
+						fmt.Print("Mauvaise lettre.")
 						return 0
 					}
 				}
