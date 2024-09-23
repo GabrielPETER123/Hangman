@@ -5,46 +5,50 @@ import (
 	"fmt"
 	"math/rand"
 	"os"
+	"strings"
 )
 
 func main() {
 	var mot string
-	fichier, err := os.Open("words.txt")
-	if err != nil {
-		fmt.Printf("The error is: %v", err.Error())
-		return
-	}
-	defer fichier.Close()
-	scanner := bufio.NewScanner(fichier)
+	var boolInput bool
+	ListInput := []string{}
+	//	fichier, err := os.Open("words.txt")
+	//	if err != nil {
+	//		fmt.Printf("The error is: %v", err.Error())
+	//		return
+	//	}
+	//	defer fichier.Close()
+	//	scanner := bufio.NewScanner(fichier)
 	// compter le nombre de lignes/mots avec le scanner et la mettre dans une variable à utiliser pour la variable aléatoire "nMot"
 	// variable aléatoire "nMot" pour choisir un mot
 	// variable pour la ligne (qui lit le mot)
 
-	attempts := 10
+	//	attempts := 10
 
 	//lire la sortie standard
-	standardOutput := bufio.NewScanner(os.Stdin)
-	for standardOutput.Scan() {
-		outputLine := standardOutput.Text()
-	}
-	if err := standardOutput.Err(); err != nil {
-		fmt.Println("Error reading from standard output:", err)
+	reader := bufio.NewReader(os.Stdin)
+	inputLettre, err := reader.ReadString('\n')
+	if err != nil {
+		fmt.Println(err)
 	}
 
-	if attempts == 10 {
-		func(len mot)
-	}
+	//	if attempts == 10 {
+	//		func(len mot)
+	//	}
 
 	//message d'erreur
-	if len(line) > 1 {
+	if len(inputLettre) > 3 {
 		fmt.Print("Too much input")
 	}
-	if len(line) < 1 {
+	if len(inputLettre) < 3 {
 		fmt.Print("Not enough input")
-	}
-	if VerifyInput(line, mot) >= -1 && VerifyInput(line, mot) <= 1 {
 	} else {
-		fmt.Print("error")
+		boolInput, ListInput = VerifyInput(inputLettre, mot, ListInput)
+		if boolInput {
+			fmt.Print("Bien joué!")
+		} else {
+			fmt.Print("Mauvaise réponse")
+		}
 	}
 }
 
@@ -55,29 +59,15 @@ func Intn(n int) int {
 	return rand.Intn(n)
 }
 
-func VerifyInput(s string, mot string) int {
-	var ListInput []string
-	if len(ListInput) == 0 {
-		ListInput = append(ListInput, s)
+func VerifyInput(s string, mot string, ListInput []string) (bool, []string) {
+	if strings.Contains(strings.Join(ListInput, ""), s) {
+		fmt.Println("Lettre déjà utilisée.")
+		return false, ListInput
 	}
-	if len(ListInput) > 0 {
-		for _, r := range ListInput {
-			if s == r {
-				fmt.Print("lettre déjà utilisée.")
-				return -1
-			} else {
-				for _, r := range mot {
-					ListInput = append(ListInput, s)
-					if s == r {
-						fmt.Print("Bien joué!")
-						return 1
-					} else {
-						fmt.Print("Mauvaise lettre.")
-						return 0
-					}
-				}
-			}
-		}
+	runeS := []rune(s)[0]
+	if strings.ContainsRune(mot, runeS) {
+		return true, append(ListInput, s)
+	} else {
+		return false, append(ListInput, s)
 	}
-	return 2
 }
