@@ -9,11 +9,18 @@ import (
 
 func main() {
 	var mot string
-	fichier := os.Open(words.txt)
-	for i, v := range len(fichier) {
-		mot = fichier[i]
+	fichier, err := os.Open("words.txt")
+	if err != nil {
+		fmt.Printf("The error is: %v", err.Error())
+		return
 	}
+	defer fichier.Close()
+	scanner := bufio.NewScanner(fichier)
+	// variable aléatoire pour choisir un mot
+	// variable pour la ligne (qui lit le mot)
+
 	attempts := 10
+
 	//lire la sortie standard
 	standardOutput := bufio.NewScanner(os.Stdin)
 	for standardOutput.Scan() {
