@@ -10,7 +10,6 @@ import (
 func main() {
 	var mot string
 	attempts := 10
-
 	//lire la sortie standard
 	standardOutput := bufio.NewScanner(os.Stdin)
 	for standardOutput.Scan() {
@@ -27,17 +26,13 @@ func main() {
 	//message d'erreur
 	if len(line) > 1 {
 		fmt.Print("Too much input")
-		return
 	}
 	if len(line) < 1 {
 		fmt.Print("Not enough input")
-		return
 	}
 	if VerifyInput(line, mot) >= -1 && VerifyInput(line, mot) <= 1 {
-		return
 	} else {
 		fmt.Print("error")
-		return
 	}
 }
 
@@ -73,8 +68,4 @@ func VerifyInput(s string, mot string) int {
 		}
 	}
 	return 2
-}
-
-func Intn(n int) int {
-	return rand.Intn(n)
 }
