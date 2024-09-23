@@ -1,22 +1,39 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
+	"math/rand"
 	"os"
 )
 
 func main() {
-	arg := os.Args[1:]
 	var mot string
-	if len(arg) > 1 {
+	attempts := 10
+
+	//lire la sortie standard
+	standardOutput := bufio.NewScanner(os.Stdin)
+	for standardOutput.Scan() {
+		line := standardOutput.Text()
+	}
+	if err := standardOutput.Err(); err != nil {
+		fmt.Println("Error reading from standard output:", err)
+	}
+
+	if attempts == 10 {
+		func(len mot)
+	}
+
+	//message d'erreur
+	if len(line) > 1 {
 		fmt.Print("Too much input")
 		return
 	}
-	if len(arg) < 1 {
+	if len(line) < 1 {
 		fmt.Print("Not enough input")
 		return
 	}
-	if VerifyInput(arg[0], mot) >= -1 && VerifyInput(arg[0], mot) <= 1 {
+	if VerifyInput(line, mot) >= -1 && VerifyInput(line, mot) <= 1 {
 		return
 	} else {
 		fmt.Print("error")
@@ -25,6 +42,10 @@ func main() {
 }
 
 func PrintHangman() {
+}
+
+func Intn(n int) int {
+	return rand.Intn(n)
 }
 
 func VerifyInput(s string, mot string) int {
@@ -52,4 +73,8 @@ func VerifyInput(s string, mot string) int {
 		}
 	}
 	return 2
+}
+
+func Intn(n int) int {
+	return rand.Intn(n)
 }
