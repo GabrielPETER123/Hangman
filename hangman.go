@@ -9,6 +9,10 @@ import (
 
 func main() {
 	var mot string
+	fichier := os.Open(words.txt)
+	for v = 0, v := range len(fichier) {
+		mot = fichier[i]
+	}
 	attempts := 10
 	//lire la sortie standard
 	standardOutput := bufio.NewScanner(os.Stdin)
