@@ -14,11 +14,12 @@ func main() {
 	ListInput := []string{}
 	bad_guesses := 0
 	attempts := 10
-	word, find_word:= FindWord("words.txt")
+	fmt.Print("Welcome to the Hangman game!\n")
+	word, find_word := FindWord(Difficulty())
 	if find_word == false {
 		return
 	}
-	fmt.Print("Bienvenue dans le jeu du pendu!\nÉcrivez une lettre pour essayer de deviner le mot!\n")
+	fmt.Print("Try to find the word by writing a letter!\n")
 	CharOfWord := CharOfWord(word)
 	for attempts > 0 && find_word == true {
 		input := ReadInput()
@@ -34,15 +35,15 @@ func main() {
 			} else if int_input == 0 {
 				bad_guesses++
 				PrintHangman(bad_guesses)
-				fmt.Printf("Nombre de tentatives restantes: %d\n", attempts-bad_guesses)
+				fmt.Printf("You have %d attempts left.\n", attempts-bad_guesses)
 			}
-			PrintWord(CharOfWord, attempts)
+			CharOfWord = PrintWord(CharOfWord, word, attempts, int_input, input)
 			if CompareWordAndListInput(CharOfWord, ListInput) {
-				fmt.Print("Vous avez gagné!\n")
+				fmt.Print("You won\n")
 				return
 			}
 			if attempts-bad_guesses == 0 {
-				fmt.Print("Vous avez perdu! Le mot était: ", word, "\n")
+				fmt.Print("You lost, the word was : ", word, "\n")
 				break
 			}
 			attempts--
@@ -72,7 +73,7 @@ func PrintHangman(bad_guesses int) {
 
 func VerifyInput(s string, mot string, ListInput []string) (int, []string) {
 	if strings.Contains(strings.Join(ListInput, ""), s) {
-		fmt.Print("Lettre déjà utilisée.\n")
+		fmt.Print("Already used.\n")
 		return -1, ListInput
 	}
 	runeS := []rune(s)[0]
@@ -97,7 +98,7 @@ func CharOfWord(mot string) []string {
 				if char == charoflist {
 					break
 				} else {
-				listChar = append(listChar, string(char))
+					listChar = append(listChar, string(char))
 				}
 			}
 		}
@@ -105,7 +106,7 @@ func CharOfWord(mot string) []string {
 	return listChar
 }
 
-func CompareWordAndListInput(WordChar, ListInput []string) bool{
+func CompareWordAndListInput(WordChar, ListInput []string) bool {
 	InputRight := 0
 	if len(WordChar) != len(ListInput) {
 		return false
@@ -123,31 +124,25 @@ func CompareWordAndListInput(WordChar, ListInput []string) bool{
 	return false
 }
 
-func PrintWord(CharOfWord []string, attempt int) {
-	charprint := []string{}
-	input := ReadInput()
-	if attempt == 10 {
-		for i := 0; i < len(CharOfWord)/2 - 1; i++ {
-			charprint = append(charprint, CharOfWord[rand.Intn(len(CharOfWord))])
-		}
+func PrintWord(CharOfWord []string, word string, attempts, int_input int, input string) []string {
+	if int_input == 1 {
+		CharOfWord = append(CharOfWord, input)
 	}
-	for strings.Compare(strings.Join(charprint, ""), input) == 0 {
-		charprint = append(charprint, input)
-	}
-	for _, c := range CharOfWord {
-		if strings.Contains(strings.Join(charprint, ""), c) {
-			fmt.Print(c)
+	for _, char := range word {
+		if strings.Contains(strings.Join(CharOfWord, ""), string(char)) {
+			fmt.Print(string(char))
 		} else {
 			fmt.Print("_")
 		}
 	}
 	fmt.Print("\n")
+	return CharOfWord
 }
 
-func FindWord(fichier string) (string, bool) {
+func FindWord(dificult string) (string, bool) {
 	find_word := false
 	var word string
-	file, err := os.Open(fichier)
+	file, err := os.Open(dificult)
 	if err != nil {
 		fmt.Printf("The error is: %v", err.Error())
 		return word, false
@@ -170,4 +165,22 @@ func FindWord(fichier string) (string, bool) {
 		return word, false
 	}
 	return word, true
+}
+
+func Difficulty() string {
+	fmt.Println("Choose your level: ")
+	var level string
+	fmt.Scanln(&level)
+	var dificult string
+	switch level {
+	case "1":
+		dificult = "words.txt"
+	case "2":
+		dificult = "words2.txt"
+	case "3":
+		dificult = "words3.txt"
+	default:
+		fmt.Println("Invalid input")
+	}
+	return dificult
 }
