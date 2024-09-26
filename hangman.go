@@ -144,7 +144,6 @@ func PrintWord(CharOfWord []string, attempt int) {
 	fmt.Print("\n")
 }
 
-
 func FindWord(fichier string) (string, bool) {
 	find_word := false
 	var word string
