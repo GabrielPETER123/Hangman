@@ -39,10 +39,6 @@ func main() {
 		if len(input) < 1 {
 			fmt.Print("Not enough input\n")
 		} else {
-			if VerifyWord(mot, ListInput) {
-				fmt.Print("Vous avez déjà trouvé le mot!\n")
-				return
-			}
 			int_input, ListInput = VerifyInput(input, mot, ListInput)
 			if int_input == -1 {
 				continue
@@ -51,38 +47,22 @@ func main() {
 				PrintHangman(bad_guesses)
 				fmt.Printf("Nombre de tentatives restantes: %d\n", attempts-bad_guesses)
 			}
-			PrintMot(mot, ListInput)
-			if strings.Contains(mot, strings.Join(ListInput, "")) {
-				fmt.Print("Bien joué!\n")
-				break
-			} else if bad_guesses == attempts {
-				fmt.Print("Pas de chance... Mauvaise réponse !\n")
+			PrintMot(mot, ListInput, attempts)
+			if strings.Compare(mot, strings.Join(ListInput, "")) == 0 {
+				fmt.Print("Bravo, vous avez trouvé le mot!\n")
 				break
 			}
+			if attempts-bad_guesses == 0 {
+				fmt.Print("Vous avez perdu! Le mot était: ", mot, "\n")
+				break
+			}
+			attempts--
 		}
 	}
 	return
 }
 
-func PrintMot(mot string, ListInput []string) {
-	nbr_letter_reveal := (len(mot) / 2) - 1
-	for i := 0; i < nbr_letter_reveal; i++ {
-		rand_letter := RandomNbr(len(mot))
-		if strings.Contains(strings.Join(ListInput, ""), string(mot[rand_letter])) {
-			continue
-		} else {
-			ListInput = append(ListInput, string(mot[rand_letter]))
-		}
-	}
-	for _, letter := range mot {
-		if strings.Contains(strings.Join(ListInput, ""), string(letter)) {
-			fmt.Print(string(letter))
-		} else {
-			fmt.Print("_")
-		}
-	}
-	fmt.Print("\n")
-}
+
 
 func PrintHangman(bad_guesses int) {
 	start := 1 * bad_guesses
@@ -126,11 +106,56 @@ func ReadInput() string {
 	return input.Text()
 }
 
-func VerifyWord(mot string, ListInput []string) bool {
-	var char_word []string
-	for _, letter := range mot {
-		if char_word == rune 
-		char_word = append(char_word, string(letter))
+func CharOfWord(mot string) []string {
+	listChar := []string{}
+	for _, char := range mot {
+		for _, r := range listChar {
+			for _, charoflist := range r {
+				if char == charoflist {
+					break
+				} else {
+				listChar = append(listChar, string(char))
+				}
+			}
+		}
 	}
+	return listChar
+}
 
+func CompareWordAndListInput(WordChar, ListInput []string) bool{
+	InputRight := 0
+	if len(WordChar) != len(ListInput) {
+		return false
+	}
+	for i := 0; i < len(WordChar)-1; i++ {
+		if WordChar[i] != ListInput[i] {
+			return false
+		} else {
+			InputRight++
+		}
+	}
+	if InputRight == len(WordChar) {
+		return true
+	}
+	return false
+}
+
+func PrintWord(CharOfWord []string, ListInput string, attempt int) {
+	charprint := []string{}
+	if attempt == 10 {
+		for i := 0; i < len(CharOfWord)/2 - 1; i++ {
+			charprint = append(charprint, CharOfWord[RandomNbr(len(CharOfWord))])
+		}
+	}
+	for strings.Compare(strings.Join(charprint, ""), ListInput) == 0 {
+		
+	}
+	for _, c := range CharOfWord {
+		if strings.Contains(strings.Join(charprint, ""), c) {
+			fmt.Print(c)
+		} else {
+			fmt.Print("_")
+		}
+	}
+	fmt.Print("\n")
 }
