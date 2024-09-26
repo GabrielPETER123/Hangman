@@ -9,10 +9,10 @@ import (
 )
 
 func main() {
-	var mot string
+	var word string
 	var int_input int
 	ListInput := []string{}
-	find_mot := false
+	find_word := false
 	bad_guesses := 0
 	attempts := 10
 	fichier, err := os.Open("words.txt")
@@ -23,15 +23,16 @@ func main() {
 	defer fichier.Close()
 	scan := bufio.NewScanner(fichier)
 	for scan.Scan() {
-		mot = scan.Text()
-		find_mot = true
+		word = scan.Text()
+		find_word = true
 	}
-	if find_mot == false {
+	if find_word == false {
 		fmt.Print("No word found\n")
 		return
 	}
 	fmt.Print("Bienvenue dans le jeu du pendu!\nÉcrivez une lettre pour essayer de deviner le mot!\n")
-	for attempts > 0 && find_mot == true {
+	CharOfWord := CharOfWord(word)
+	for attempts > 0 && find_word == true {
 		input := ReadInput()
 		if len(input) > 1 {
 			fmt.Print("Too much input\n")
@@ -39,7 +40,7 @@ func main() {
 		if len(input) < 1 {
 			fmt.Print("Not enough input\n")
 		} else {
-			int_input, ListInput = VerifyInput(input, mot, ListInput)
+			int_input, ListInput = VerifyInput(input, word, ListInput)
 			if int_input == -1 {
 				continue
 			} else if int_input == 0 {
@@ -47,13 +48,13 @@ func main() {
 				PrintHangman(bad_guesses)
 				fmt.Printf("Nombre de tentatives restantes: %d\n", attempts-bad_guesses)
 			}
-			PrintMot(mot, ListInput, attempts)
-			if strings.Compare(mot, strings.Join(ListInput, "")) == 0 {
-				fmt.Print("Bravo, vous avez trouvé le mot!\n")
-				break
+			PrintWord(CharOfWord, attempts)
+			if CompareWordAndListInput(CharOfWord, ListInput) {
+				fmt.Print("Vous avez gagné!\n")
+				return
 			}
 			if attempts-bad_guesses == 0 {
-				fmt.Print("Vous avez perdu! Le mot était: ", mot, "\n")
+				fmt.Print("Vous avez perdu! Le mot était: ", word, "\n")
 				break
 			}
 			attempts--
@@ -61,8 +62,6 @@ func main() {
 	}
 	return
 }
-
-
 
 func PrintHangman(bad_guesses int) {
 	start := 1 * bad_guesses
@@ -81,10 +80,6 @@ func PrintHangman(bad_guesses int) {
 		}
 		read_line++
 	}
-}
-
-func RandomNbr(n int) int {
-	return rand.Intn(n)
 }
 
 func VerifyInput(s string, mot string, ListInput []string) (int, []string) {
@@ -140,15 +135,16 @@ func CompareWordAndListInput(WordChar, ListInput []string) bool{
 	return false
 }
 
-func PrintWord(CharOfWord []string, ListInput string, attempt int) {
+func PrintWord(CharOfWord []string, attempt int) {
 	charprint := []string{}
+	input := ReadInput()
 	if attempt == 10 {
 		for i := 0; i < len(CharOfWord)/2 - 1; i++ {
-			charprint = append(charprint, CharOfWord[RandomNbr(len(CharOfWord))])
+			charprint = append(charprint, CharOfWord[rand.Intn(len(CharOfWord))])
 		}
 	}
-	for strings.Compare(strings.Join(charprint, ""), ListInput) == 0 {
-		
+	for strings.Compare(strings.Join(charprint, ""), input) == 0 {
+		charprint = append(charprint, input)
 	}
 	for _, c := range CharOfWord {
 		if strings.Contains(strings.Join(charprint, ""), c) {
