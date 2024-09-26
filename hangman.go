@@ -12,22 +12,10 @@ func main() {
 	var word string
 	var int_input int
 	ListInput := []string{}
-	find_word := false
 	bad_guesses := 0
 	attempts := 10
-	fichier, err := os.Open("words.txt")
-	if err != nil {
-		fmt.Printf("The error is: %v", err.Error())
-		return
-	}
-	defer fichier.Close()
-	scan := bufio.NewScanner(fichier)
-	for scan.Scan() {
-		word = scan.Text()
-		find_word = true
-	}
+	word, find_word:= FindWord("words.txt")
 	if find_word == false {
-		fmt.Print("No word found\n")
 		return
 	}
 	fmt.Print("Bienvenue dans le jeu du pendu!\nÉcrivez une lettre pour essayer de deviner le mot!\n")
@@ -154,4 +142,33 @@ func PrintWord(CharOfWord []string, attempt int) {
 		}
 	}
 	fmt.Print("\n")
+}
+
+
+func FindWord(fichier string) (string, bool) {
+	find_word := false
+	var word string
+	file, err := os.Open(fichier)
+	if err != nil {
+		fmt.Printf("The error is: %v", err.Error())
+		return word, false
+	}
+	defer file.Close()
+	scan := bufio.NewScanner(file)
+	for scan.Scan() {
+		words := []string{}
+		for scan.Scan() {
+			words = append(words, scan.Text())
+		}
+		if len(words) > 0 {
+			word = words[rand.Intn(len(words))]
+			find_word = true
+		}
+		find_word = true
+	}
+	if find_word == false {
+		fmt.Print("No word found\n")
+		return word, false
+	}
+	return word, true
 }
