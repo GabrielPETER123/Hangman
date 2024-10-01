@@ -168,8 +168,8 @@ func PrintWord(CharOfWord, ListToPrint []rune, word string) {
 
 func FindWord(dificult string) string {
 	var word string
-	file, err := os.Open(dificult)
-	if err != nil {
+	file, err := os.Open(dificult) // Ouvre le fichier de mots selon la difficulté choisie
+	if err != nil { // Affiche une erreur si le fichier n'est pas trouvé
 		fmt.Printf("The error is: %v", err.Error())
 		return word
 	}
@@ -187,12 +187,12 @@ func FindWord(dificult string) string {
 	return word
 }
 
-func Difficulty() string {
-	fmt.Println("Choose your level: ")
+func Difficulty() string { //Permet de choisir la difficulté
+	fmt.Println("Choose your level: ") //Demande à l'utilisateur de choisir un niveau
 	var level string
-	fmt.Scanln(&level)
+	fmt.Scanln(&level) //récupère le choix de niveau de l'utilisateur
 	var dificult string
-	switch level {
+	switch level { //Permet de choisir le fichier de mots en fonction du niveau choisi
 	case "1":
 		dificult = "words.txt"
 	case "2":
@@ -202,17 +202,17 @@ func Difficulty() string {
 	default:
 		fmt.Println("Invalid input")
 	}
-	return dificult
+	return dificult //Retourne le fichier de mots correspondant au niveau choisi
 }
 
-func TransStringToRune(s string) []rune {
+func TransStringToRune(s string) []rune { //Transforme un string en liste de runes
 	r := []rune(s)
 	return r
 }
 
-func SortRune(Runes []rune) []rune {
-	sort.Slice(Runes, func(i, j int) bool {
-		return Runes[i] < Runes[j]
+func SortRune(Runes []rune) []rune { //Trie les runes dans l'ordre croissant
+	sort.Slice(Runes, func(i, j int) bool {	//Transforme les runes en int pour les comparer
+		return Runes[i] < Runes[j] 	//Retourne les runes triées
 	})
-	return Runes
+	return Runes //Retourne la liste des runes triées
 }
