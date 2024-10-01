@@ -137,37 +137,37 @@ func VerifyInput(CharOfWord, RInput, ListInput []rune) (bool, int) {
 	return false, 0
 }
 
-func ReadInput() string {
-	input := bufio.NewScanner(os.Stdin)
-	input.Scan()
-	return input.Text()
+func ReadInput() string { // Lit la réponse de l'utilisateur
+	input := bufio.NewScanner(os.Stdin) // Crée un scanner pour lire la réponse de l'utilisateur
+	input.Scan() // Lit la réponse de l'utilisateur
+	return input.Text() // Retourne la réponse de l'utilisateur
 }
 
-func CharOfWord(word []rune) []rune {
+func CharOfWord(word []rune) []rune { // Permet de savoir toutes les lettres différentes du mot à trouver	
 	CharOfWord := []rune{}
-	CharOfWord = append(CharOfWord, word[0])
-	for i := 1; i < len(word); i++ {
-		for j := 0; j < len(CharOfWord); j++ {
-			if word[i] == CharOfWord[j] {
+	CharOfWord = append(CharOfWord, word[0]) // Ajoute la première lettre du mot à la liste des lettres du mot
+	for i := 1; i < len(word); i++ { // Parcours le mot
+		for j := 0; j < len(CharOfWord); j++ { // Parcours la liste des lettres du mot
+			if word[i] == CharOfWord[j] { // Si la lettre du mot est déjà dans la liste des lettres du mot alors on passe à la lettre suivante
 				break
 			}
-			if j == len(CharOfWord)-1 {
-				CharOfWord = append(CharOfWord, word[i])
+			if j == len(CharOfWord)-1 { // sinon si on a parcouru toute la liste des lettres du mot
+				CharOfWord = append(CharOfWord, word[i]) // On ajoute la lettre du mot à la liste des lettres du mot
 			}
 		}
 	}
 	fmt.Print(CharOfWord, "\n")
-	return CharOfWord
+	return CharOfWord // Retourne la liste des lettres du mot
 }
 
-func Compare(CharOfWord, ListInput []rune) bool {
-	SortRune(CharOfWord)
-	SortRune(ListInput)
-	if len(CharOfWord) != len(ListInput) {
+func Compare(CharOfWord, ListInput []rune) bool { // Permet de comparer la liste des lettres du mot avec les lettre trouvées
+	SortRune(CharOfWord) // Trie les runes du mot
+	SortRune(ListInput) // Trie les runes des lettres trouvées
+	if len(CharOfWord) != len(ListInput) { // Si la longeur des deux listes est différente alors le mot n'est pas trouvé
 		return false
 	} else {
-		for i := 0; i < len(CharOfWord); i++ {
-			if CharOfWord[i] != ListInput[i] {
+		for i := 0; i < len(CharOfWord); i++ { // Parcours les deux listes
+			if CharOfWord[i] != ListInput[i] { // Si une rune est différente alors le mot n'est pas trouvé
 				return false
 			}
 		}
@@ -175,48 +175,48 @@ func Compare(CharOfWord, ListInput []rune) bool {
 	return true
 }
 
-func PrintWord(CharOfWord, ListToPrint []rune, word string) {
-	for _, r := range word {
-		for index, char := range ListToPrint {
-			if r == char || r == char-32 {
+func PrintWord(CharOfWord, ListToPrint []rune, word string) { //Affiche le mot à trouver
+	for _, r := range word { // Parcours le mot à trouver
+		for index, char := range ListToPrint { // Parcours la liste des lettres à afficher
+			if r == char || r == char-32 { // Si la lettre à afficher est la même que la lettre du mot
 				fmt.Print(string(r-32), " ")
-				break
-			} else if index == len(ListToPrint)-1 {
-				fmt.Print("_ ")
-				break
+				break // Si la lettre à afficher est la même que la lettre du mot alors on passe à la lettre suivante du mot
+			} else if index == len(ListToPrint)-1 { // sinon si on aucune lettre n'a été trouvée dans la liste des lettres à afficher
+				fmt.Print("_ ") // On affiche un underscore
+				break // On passe à la lettre suivante du mot
 			}
 		}
 	}
 	fmt.Print("\n")
 }
 
-func FindWord(dificult string) string {
+func FindWord(dificult string) string { //Trouve un mot aléatoire dans le fichier de mots
 	var word string
-	file, err := os.Open(dificult)
-	if err != nil {
+	file, err := os.Open(dificult) // Ouvre le fichier de mots selon la difficulté choisie
+	if err != nil { // Affiche une erreur si le fichier n'est pas trouvé
 		fmt.Printf("The error is: %v", err.Error())
 		return word
 	}
-	defer file.Close()
-	scan := bufio.NewScanner(file)
-	for scan.Scan() {
+	defer file.Close() // Ferme le fichier à la fin de la fonction
+	scan := bufio.NewScanner(file) // Crée un scanner pour lire le fichier
+	for scan.Scan() { // Parcours le fichier de mots
 		words := []string{}
-		for scan.Scan() {
-			words = append(words, scan.Text())
+		for scan.Scan() { // Parcours le fichier de mots
+			words = append(words, scan.Text()) // Ajoute les mots du fichier dans une liste de mots
 		}
-		if len(words) > 0 {
-			word = words[rand.Intn(len(words))]
+		if len(words) > 0 { // Si la liste de mots n'est pas vide
+			word = words[rand.Intn(len(words))] // Prend un mot aléatoire dans la liste de mots
 		}
 	}
-	return word
+	return word // Retourne le mot aléatoire
 }
 
-func Difficulty() string {
-	fmt.Println("Choose your level: ")
+func Difficulty() string { //Permet de choisir la difficulté
+	fmt.Println("Choose your level: ") //Demande à l'utilisateur de choisir un niveau
 	var level string
-	fmt.Scanln(&level)
+	fmt.Scanln(&level) //récupère le choix de niveau de l'utilisateur
 	var dificult string
-	switch level {
+	switch level { //Permet de choisir le fichier de mots en fonction du niveau choisi
 	case "1":
 		dificult = "words.txt"
 	case "2":
@@ -226,17 +226,17 @@ func Difficulty() string {
 	default:
 		fmt.Println("Invalid input")
 	}
-	return dificult
+	return dificult //Retourne le fichier de mots correspondant au niveau choisi
 }
 
-func TransStringToRune(s string) []rune {
+func TransStringToRune(s string) []rune { //Transforme un string en liste de runes
 	r := []rune(s)
 	return r
 }
 
-func SortRune(Runes []rune) []rune {
-	sort.Slice(Runes, func(i, j int) bool {
-		return Runes[i] < Runes[j]
+func SortRune(Runes []rune) []rune { //Trie les runes dans l'ordre croissant
+	sort.Slice(Runes, func(i, j int) bool {	//Transforme les runes en int pour les comparer
+		return Runes[i] < Runes[j] 	//Retourne les runes triées
 	})
-	return Runes
+	return Runes //Retourne la liste des runes triées
 }
