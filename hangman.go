@@ -173,7 +173,7 @@ func FindWord(dificult string) string {
 		fmt.Printf("The error is: %v", err.Error())
 		return word
 	}
-	defer file.Close()
+	defer file.Close() // Ferme le fichier à la fin de la fonction
 	scan := bufio.NewScanner(file)
 	for scan.Scan() {
 		words := []string{}
