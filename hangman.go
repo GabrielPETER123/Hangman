@@ -13,6 +13,8 @@ func main() {
 	ListToPrint := []rune{}
 	bad_guesses := 0
 	attempts := 10
+	maj := 0
+	inputVerify := false
 	fmt.Print("Welcome to the Hangman game!\n")
 	word := FindWord(Difficulty())
 	fmt.Print(word, "\n")
@@ -21,28 +23,37 @@ func main() {
 	for i := 0; i < lenRand; i++ {
 		ListToPrint = append(ListToPrint, CharOfWord[rand.Intn(len(CharOfWord))])
 	}
-	fmt.Print(ListToPrint, "\n")
 	PrintWord(CharOfWord, ListToPrint, word)
 	fmt.Print("Try to find the word by writing a letter!\n")
+
 	for attempts > 0 {
+		fmt.Print(CharOfWord, "\n")
+		fmt.Print(ListToPrint, "\n")
+		if Compare(CharOfWord, ListToPrint) {
+			fmt.Print("You won\n")
+			fmt.Print("The word was: ", word, "\n")
+			return
+		}
 		input := ReadInput()
 		RInput := TransStringToRune(input)
-		if !(VerifyInput(CharOfWord, RInput, ListInput)) {
+		ListInput = append(ListInput, ListToPrint...)
+		inputVerify, maj = VerifyInput(CharOfWord, RInput, ListInput)
+		if inputVerify == false {
 			bad_guesses++
 			PrintHangman(bad_guesses)
 			fmt.Printf("Bad Guess\n")
 		} else {
+			fmt.Print(ListToPrint, "\n")
+			if maj == 1 {
+				RInput[0] = RInput[0] + 32
+			}
+			ListInput = append(ListInput, RInput[0])
 			ListToPrint = append(ListToPrint, RInput[0])
 			fmt.Print("Good Guess\n")
 		}
 		PrintWord(CharOfWord, ListToPrint, word)
 		fmt.Print("Attempts left: ", attempts, "\n")
 		attempts--
-		if Compare(CharOfWord, ListInput) {
-			fmt.Print("You won\n")
-			fmt.Print("The word was: ", word, "\n")
-			return
-		}
 		if attempts == 0 {
 			fmt.Print("You lost, the word was : ", word, "\n")
 			break
@@ -70,7 +81,7 @@ func PrintHangman(bad_guesses int) {
 	}
 }
 
-func VerifyInput(CharOfWord, RInput, ListInput []rune) bool {
+func VerifyInput(CharOfWord, RInput, ListInput []rune) (bool, int) {
 	if len(RInput) > 1 {
 		fmt.Print("Too much input\n")
 		VerifyInput(CharOfWord, TransStringToRune(ReadInput()), ListInput)
@@ -85,12 +96,21 @@ func VerifyInput(CharOfWord, RInput, ListInput []rune) bool {
 			VerifyInput(CharOfWord, TransStringToRune(ReadInput()), ListInput)
 		}
 	}
+	if !((RInput[0] >= 65 && RInput[0] <= 90) || (RInput[0] >= 97 && RInput[0] <= 122)) {
+		fmt.Print("Invalid input\n")
+		VerifyInput(CharOfWord, TransStringToRune(ReadInput()), ListInput)
+	}
 	for _, char := range CharOfWord {
-		if char == RInput[0] || char == RInput[0]-32 {
-			return false
+		if char == RInput[0] {
+			return true, 0
 		}
 	}
-	return true
+	for _, char := range CharOfWord {
+		if char == RInput[0]+32 {
+			return true, 1
+		}
+	}
+	return false, 0
 }
 
 func ReadInput() string {
@@ -132,15 +152,15 @@ func Compare(CharOfWord, ListInput []rune) bool {
 }
 
 func PrintWord(CharOfWord, ListToPrint []rune, word string) {
-	for index, r := range word {
-		for i := 0; i < len(ListToPrint)-1; i++ {
-			if r == ListToPrint[i] {
+	for _, r := range word {
+		for index, char := range ListToPrint {
+			if r == char || r == char-32 {
 				fmt.Print(string(r-32), " ")
 				break
+			} else if index == len(ListToPrint)-1 {
+				fmt.Print("_ ")
+				break
 			}
-		} 
-		if index != len(word)-1 {
-			fmt.Print("_ ")
 		}
 	}
 	fmt.Print("\n")
