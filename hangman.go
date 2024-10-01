@@ -48,7 +48,7 @@ func main() {
 		ListInput = append(ListInput, ListToPrint...)
 		inputVerify, maj = VerifyInput(CharOfWord, RInput, ListInput)
 		if inputVerify == false {
-			//on ajoute +1 au contenu du compteur de mauvais guesse
+			//on ajoute +1 au contenu du compteur de mauvais guesse 
 			bad_guesses++
 			PrintHangman(bad_guesses)
 			//on imprime dans la console que la lettre que le joueur a deviné n'est pas dans le mot
@@ -64,7 +64,6 @@ func main() {
 			ListToPrint = append(ListToPrint, RInput[0])
 			//on imprime dans la console que la lettre que le joueur a proposer fait bien partie du mot
 			fmt.Print("Good Guess\n")
-		}
 		PrintWord(CharOfWord, ListToPrint, word)
 		//on imprime dans la console le reste d'essaie qu'à encore le joueur
 		fmt.Print("Attempts left: ", attempts, "\n")
