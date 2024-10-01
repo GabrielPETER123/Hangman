@@ -166,7 +166,7 @@ func PrintWord(CharOfWord, ListToPrint []rune, word string) {
 	fmt.Print("\n")
 }
 
-func FindWord(dificult string) string {
+func FindWord(dificult string) string { //Trouve un mot aléatoire dans le fichier de mots
 	var word string
 	file, err := os.Open(dificult) // Ouvre le fichier de mots selon la difficulté choisie
 	if err != nil { // Affiche une erreur si le fichier n'est pas trouvé
@@ -174,17 +174,17 @@ func FindWord(dificult string) string {
 		return word
 	}
 	defer file.Close() // Ferme le fichier à la fin de la fonction
-	scan := bufio.NewScanner(file)
-	for scan.Scan() {
+	scan := bufio.NewScanner(file) // Crée un scanner pour lire le fichier
+	for scan.Scan() { // Parcours le fichier de mots
 		words := []string{}
-		for scan.Scan() {
-			words = append(words, scan.Text())
+		for scan.Scan() { // Parcours le fichier de mots
+			words = append(words, scan.Text()) // Ajoute les mots du fichier dans une liste de mots
 		}
-		if len(words) > 0 {
-			word = words[rand.Intn(len(words))]
+		if len(words) > 0 { // Si la liste de mots n'est pas vide
+			word = words[rand.Intn(len(words))] // Prend un mot aléatoire dans la liste de mots
 		}
 	}
-	return word
+	return word // Retourne le mot aléatoire
 }
 
 func Difficulty() string { //Permet de choisir la difficulté
