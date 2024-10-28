@@ -57,7 +57,7 @@ func main() {
 		ListToPrint = compressListToPrint(ListToPrint)
 		if Compare(CharOfWord, ListToPrint) {
 			fmt.Print("You won\n")
-			//fmt.Print("The word was: ", word, "\n")
+			fmt.Print("The word was: ", word, "\n")
 			return
 		}
 		fmt.Scan(&input)
@@ -221,7 +221,6 @@ func CharOfWord(word []rune) []rune {
 			}
 		}
 	}
-	fmt.Print("CharOfWord = ", CharOfWord , "\n")
 	return CharOfWord
 }
 
