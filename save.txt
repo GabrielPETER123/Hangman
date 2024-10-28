@@ -1,0 +1,5 @@
+radiateur
+10
+0
+dir
+dir
