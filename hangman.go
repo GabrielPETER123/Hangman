@@ -37,8 +37,6 @@ func main() {
 		fmt.Print("New game\n")
 		word = FindWord(Difficulty())
 	}
-
-	fmt.Print("The Word is :", word, "\n")//à enlever
 	
 	//on cherche les lettres du mot
 	CharOfWord := CharOfWord(convertStringToListOfRune(word))
@@ -56,11 +54,10 @@ func main() {
 
 	//Boucle du jeu
 	for attempts > 0 {
-		fmt.Print("ListToPrint :",ListToPrint, "\n")
 		ListToPrint = compressListToPrint(ListToPrint)
 		if Compare(CharOfWord, ListToPrint) {
 			fmt.Print("You won\n")
-			fmt.Print("The word was: ", word, "\n")
+			//fmt.Print("The word was: ", word, "\n")
 			return
 		}
 		fmt.Scan(&input)
@@ -379,7 +376,7 @@ func saveGame(word string, attempts string, bad_guesses int, ListInput []rune, L
 	//Suppression du fichier save.txt
 	err := os.Remove("save.txt")
 		if err != nil {
-			fmt.Println("Error deleting save file")//à enlever
+			fmt.Println("Error deleting save file")
 		}
 
 	//Création du fichier save.txt
