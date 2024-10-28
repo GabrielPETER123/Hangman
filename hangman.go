@@ -16,7 +16,7 @@ func main() {
 	bad_guesses := 0
 	attempts := 10
 	maj := 0
-	save := 0
+	otherInput := 0
 	inputVerify := false
 	var LoadSaveInput string
 	var saveInput string
@@ -30,6 +30,7 @@ func main() {
 	
 	if LoadSaveInput == "yes" {
 		word, attempts, bad_guesses, ListInput, ListToPrint = loadSave()
+		otherInput = 100
 	} else {
 
 		//on cherche un mot selon la difficulté choisie
@@ -37,16 +38,17 @@ func main() {
 		word = FindWord(Difficulty())
 	}
 
-	fmt.Print(word, "\n")//à enlever
+	fmt.Print("The Word is :", word, "\n")//à enlever
 	
 	//on cherche les lettres du mot
 	CharOfWord := CharOfWord(convertStringToListOfRune(word))
-	if save == 0 { 
+	if otherInput == 0 { 
 		lenRand = len(CharOfWord) / 2
-	}
-	//Print le mot selon les lettres trouvées
-	for i := 0; i < lenRand; i++ {
-		ListToPrint = append(ListToPrint, CharOfWord[rand.Intn(len(CharOfWord))])
+	
+		//Print le mot selon les lettres trouvées
+		for i := 0; i < lenRand; i++ {
+			ListToPrint = append(ListToPrint, CharOfWord[rand.Intn(len(CharOfWord))])
+		}
 	}
 	PrintWord(CharOfWord, ListToPrint, word)
 
@@ -54,8 +56,8 @@ func main() {
 
 	//Boucle du jeu
 	for attempts > 0 {
-		fmt.Print(CharOfWord, "\n") //à enlever
-		fmt.Print(ListToPrint, "\n") //à enlever
+		fmt.Print("ListToPrint :",ListToPrint, "\n")
+		ListToPrint = compressListToPrint(ListToPrint)
 		if Compare(CharOfWord, ListToPrint) {
 			fmt.Print("You won\n")
 			fmt.Print("The word was: ", word, "\n")
@@ -67,10 +69,10 @@ func main() {
 		if  LoadSaveInput != "yes" {
 			ListInput = append(ListInput, ListToPrint...)
 		}
-		inputVerify, maj, save = VerifyInput(CharOfWord, RInput, ListInput)
+		inputVerify, maj, otherInput = VerifyInput(CharOfWord, RInput, ListInput)
 		
 		//Sauvegarde de la partie
-		if save == 1 {
+		if otherInput == 1 {
 			fmt.Print("Do you want to save your progress? (yes/no)\n")
 			fmt.Scan(&saveInput)
 			if saveInput == "yes" {
@@ -78,12 +80,19 @@ func main() {
 			} 
 			if saveInput == "no" {
 				fmt.Print("Progress not saved\n")
-				save = 0
+				otherInput = 0
 				break
 			} else {
 				fmt.Print("Invalid input\n")
 			}
-
+		}
+		if otherInput == 2 {
+			fmt.Print("Do you want to stop the game? (yes/no)\n")
+			fmt.Scan(&saveInput)
+			if saveInput == "yes" {
+				fmt.Print("Game stopped\n")
+				break
+			}
 		} else {
 			//Verification de l'input
 			if inputVerify == false {
@@ -98,14 +107,18 @@ func main() {
 				}
 			}
 		}
+		if otherInput == 0 && inputVerify == true {
 
-		ListInput = append(ListInput, RInput[0])
-		ListToPrint = append(ListToPrint, RInput[0])
-		fmt.Print("Good Guess\n")
+			ListInput = append(ListInput, RInput[0])
+			ListToPrint = append(ListToPrint, RInput[0])
+			fmt.Print("Good Guess\n")	
+			attempts--
+		}
 		PrintWord(CharOfWord, ListToPrint, word)
 		fmt.Print("Attempts left: ", attempts, "\n")
-		attempts--
 
+		otherInput = 0
+		
 		//Boucle d'arret de la partie
 		if attempts == 0 {
 			fmt.Print("You lost, the word was : ", word, "\n")
@@ -138,6 +151,7 @@ func PrintHangman(bad_guesses int) {
 	}
 }
 
+//Vérifie si l'input est valide
 func VerifyInput(CharOfWord, RInput, ListInput []rune) (bool, int, int) {
 	//On cherche un input de longueur seulement égale à 1
 	var input string
@@ -145,7 +159,10 @@ func VerifyInput(CharOfWord, RInput, ListInput []rune) (bool, int, int) {
 	if len(RInput) > 1 {
 		if string(RInput) == "save" {
 			return true, 0, 1
-		} else {
+		}
+		if string(RInput) == "stop" { 
+			return true, 0, 2
+		}else {
 			fmt.Print("Too much input\n")
 		}
 		fmt.Scan(&input)
@@ -207,7 +224,7 @@ func CharOfWord(word []rune) []rune {
 			}
 		}
 	}
-	fmt.Print(CharOfWord, "\n")
+	fmt.Print("CharOfWord = ", CharOfWord , "\n")
 	return CharOfWord
 }
 
@@ -380,4 +397,22 @@ func saveGame(word string, attempts string, bad_guesses int, ListInput []rune, L
 	file.WriteString(string(ListInput) + "\n")
 	file.WriteString(string(ListToPrint) + "\n")
 	fmt.Println("Game saved")
+}
+
+func compressListToPrint(ListToPrint []rune) []rune {
+	newList := []rune{}
+	for i := 0; i < len(ListToPrint); i++ {
+		for j := 0; j < len(newList); j++ {
+			if ListToPrint[i] == newList[j] {
+				break
+			}
+			if j == len(newList)-1 {
+				newList = append(newList, ListToPrint[i])
+			}
+		}
+		if len(newList) == 0 {
+			newList = append(newList, ListToPrint[i])
+		}
+	}
+	return newList
 }

@@ -1,5 +1,5 @@
-radiateur
+fenetre
 10
 0
-dir
-dir
+ft
+ft
