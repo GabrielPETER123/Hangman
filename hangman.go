@@ -126,8 +126,8 @@ func main() {
 }
 
 func PrintHangman(bad_guesses int) {
-	start := 1 * bad_guesses
-	end := 7*bad_guesses + start
+	start := 8 * (bad_guesses-1) + 1
+	end := start + 7
 	read_line := 1
 	
 	//Ouverture du fichier hangman.txt
