@@ -126,6 +126,8 @@ func main() {
 }
 
 func PrintHangman(bad_guesses int) {
+	
+	//Variables pour encadrer le print du hangman
 	start := 8 * (bad_guesses-1) + 1
 	end := start + 7
 	read_line := 1
@@ -395,8 +397,11 @@ func saveGame(word string, attempts string, bad_guesses int, ListInput []rune, L
 	fmt.Println("Game saved")
 }
 
+//cette fonction sert seulement pour la fonction load car la liste de rune dans la save se répète (je ne sais pas pourquoi)
 func compressListToPrint(ListToPrint []rune) []rune {
 	newList := []rune{}
+
+	//Compresser la liste de rune, c'est à dire enlever les doublons
 	for i := 0; i < len(ListToPrint); i++ {
 		for j := 0; j < len(newList); j++ {
 			if ListToPrint[i] == newList[j] {
