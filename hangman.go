@@ -60,6 +60,8 @@ func main() {
 			fmt.Print("The word was: ", word, "\n")
 			return
 		}
+
+		fmt.Print("Enter a letter: ")
 		fmt.Scan(&input)
 
 		RInput := convertStringToListOfRune(input)
@@ -108,9 +110,9 @@ func main() {
 
 			ListInput = append(ListInput, RInput[0])
 			ListToPrint = append(ListToPrint, RInput[0])
-			fmt.Print("Good Guess\n")	
-			attempts--
+			fmt.Print("Good Guess\n")
 		}
+		attempts--
 		PrintWord(CharOfWord, ListToPrint, word)
 		fmt.Print("Attempts left: ", attempts, "\n")
 
